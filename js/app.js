@@ -39,6 +39,12 @@ function debounce(fn, ms) {
 function navigate(hash) {
   location.hash = hash;
 }
+function detectPlatform() {
+  const ua = navigator.userAgent || "";
+  if (/iPhone|iPad|iPod/.test(ua)) return "ios";
+  if (/Android/.test(ua)) return "android";
+  return "desktop";
+}
 
 /* ---------------------------------------------------------- data index */
 function resolveDeptName(dept, lang) {
@@ -248,6 +254,8 @@ async function init() {
   await checkStorageAvailability();
   document.body.addEventListener("click", (e) => {
     if (e.target.closest("#langSwitchBtn")) openLanguageModal();
+    if (e.target.closest("#helpBtn")) navigate("#/help");
+    if (e.target.closest("[data-back]")) history.back();
   });
   const lang = getLang();
   if (!lang) {
@@ -275,6 +283,7 @@ async function route() {
 
   if (parts.length === 0) return renderHome();
   if (parts[0] === "new") return renderNewAuditForm();
+  if (parts[0] === "help") return renderHelp();
 
   if (parts[0] === "audit" && parts[1]) {
     const id = parts[1];
@@ -301,13 +310,18 @@ async function route() {
 
 /* ------------------------------------------------------------ header */
 function topBar({ title, backHash, right = "" }) {
+  const backBtn = backHash
+    ? backHash === "back"
+      ? `<button class="icon-btn" data-back="1" aria-label="${esc(t("common.back"))}">←</button>`
+      : `<button class="icon-btn" data-nav="${backHash}" aria-label="${esc(t("common.back"))}">←</button>`
+    : "";
   return `
   <header class="topbar no-print">
     <div class="topbar-left">
-      ${backHash ? `<button class="icon-btn" data-nav="${backHash}" aria-label="${esc(t("common.back"))}">←</button>` : ""}
+      ${backBtn}
       <div class="topbar-title">${esc(title)}</div>
     </div>
-    <div class="topbar-right">${right}<button class="icon-btn" id="langSwitchBtn" aria-label="${esc(t("common.langSwitch"))}">🌐</button><span id="saveIndicator" class="save-indicator"></span></div>
+    <div class="topbar-right">${right}<button class="icon-btn" id="helpBtn" aria-label="${esc(t("common.helpAria"))}">❓</button><button class="icon-btn" id="langSwitchBtn" aria-label="${esc(t("common.langSwitch"))}">🌐</button><span id="saveIndicator" class="save-indicator"></span></div>
   </header>`;
 }
 
@@ -340,6 +354,8 @@ function restoreAppShell() {
   document.body.innerHTML = '<div id="app"></div>';
   document.body.addEventListener("click", (e) => {
     if (e.target.closest("#langSwitchBtn")) openLanguageModal();
+    if (e.target.closest("#helpBtn")) navigate("#/help");
+    if (e.target.closest("[data-back]")) history.back();
   });
 }
 
@@ -397,7 +413,10 @@ async function renderHome() {
     .join("");
 
   $app().innerHTML = `
-    ${topBar({ title: t("app.title") })}
+    ${topBar({
+      title: t("app.title"),
+      right: `<button class="icon-btn" data-nav="#/admin" aria-label="${esc(t("common.adminAria"))}">⚙</button>`,
+    })}
     <main class="container">
       <div class="hero">
         <h1>${esc(t("app.title"))}</h1>
@@ -411,9 +430,6 @@ async function renderHome() {
           ${esc(t("home.importLabel"))}
           <input type="file" id="importFile" accept="application/json" hidden />
         </label>
-      </div>
-      <div class="admin-entry-zone no-print">
-        <a href="#/admin" class="admin-entry-link">${esc(t("home.adminLink"))}</a>
       </div>
     </main>`;
 
@@ -439,6 +455,46 @@ async function renderHome() {
         exportAuditJSON(a);
       })
     );
+}
+
+/* ================================================================ HELP */
+function renderHelp() {
+  const qa = (q, a) => `<details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`;
+  $app().innerHTML = `
+    ${topBar({ title: t("help.title"), backHash: "back" })}
+    <main class="container">
+      <p class="muted">${esc(t("help.intro"))}</p>
+
+      <h2 class="section-title">${esc(t("help.s1Title"))}</h2>
+      <div class="faq">${qa(t("help.s1q1"), t("help.s1a1"))}</div>
+
+      <h2 class="section-title">${esc(t("help.s2Title"))}</h2>
+      <div class="faq">
+        ${qa(t("help.s2q1"), t("help.s2a1"))}
+        <details>
+          <summary>${esc(t("help.s2q2"))}</summary>
+          <p><strong>${esc(t("help.s2a2iosTitle"))}</strong> ${esc(t("help.s2a2ios"))}</p>
+          <p><strong>${esc(t("help.s2a2androidTitle"))}</strong> ${esc(t("help.s2a2android"))}</p>
+          <p>${esc(t("help.s2a2alt"))}</p>
+        </details>
+      </div>
+
+      <h2 class="section-title">${esc(t("help.s3Title"))}</h2>
+      <div class="faq">
+        ${qa(t("help.s3q1"), t("help.s3a1"))}
+        ${qa(t("help.s3q2"), t("help.s3a2"))}
+      </div>
+
+      <h2 class="section-title">${esc(t("help.s4Title"))}</h2>
+      <div class="faq">${qa(t("help.s4q1"), t("help.s4a1"))}</div>
+
+      <h2 class="section-title">${esc(t("help.s5Title"))}</h2>
+      <div class="faq">${qa(t("help.s5q1"), t("help.s5a1"))}</div>
+
+      <h2 class="section-title">${esc(t("help.s6Title"))}</h2>
+      <div class="faq">${qa(t("help.s6q1"), t("help.s6a1"))}</div>
+    </main>`;
+  wireNav();
 }
 
 function exportAuditJSON(audit) {
@@ -935,7 +991,9 @@ function toggleDictation(qid, textareaEl, micBtnEl) {
     activeRecognition = null;
     activeMicQid = null;
     if (event.error === "not-allowed" || event.error === "service-not-allowed") {
-      alert(t("mic.permissionDenied"));
+      const platform = detectPlatform();
+      const key = platform === "ios" ? "mic.permissionDeniedIOS" : platform === "android" ? "mic.permissionDeniedAndroid" : "mic.permissionDeniedDesktop";
+      alert(t(key));
     } else if (event.error === "network") {
       alert(t("mic.networkError"));
     } else if (event.error !== "no-speech" && event.error !== "aborted") {

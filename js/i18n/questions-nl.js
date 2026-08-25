@@ -111,8 +111,8 @@ QUESTION_TRANSLATIONS.nl = {
           { t: "Is het CSR-programma van het park gedefinieerd en wordt het regelmatig opgevolgd in overeenstemming met de CSR-programma's van Frankrijk en CPE?", g: "CSR" },
           { t: "Wordt het bijgewerkte CSR-programma per kwartaal gerapporteerd op niveau CP Frankrijk (en CPE)?", g: "CSR" },
           { t: "Zijn alle prioriteit 1-punten Legionella opgelost binnen de gestelde termijn?", g: "Legionella" },
-          { t: "Is de Legionella-risicobeoordeling actueel en conform de Franse regelgeving en het CPE Legionella-handboek? (alle risicovolle gebruikspunten zijn geïdentificeerd en worden opgevolgd)", g: "Legionella" },
-          { t: "Is het sanitair logboek Legionella volledig en conform de Franse regelgeving en het CPE Legionella-handboek?", g: "Legionella" },
+          { t: "Is de Legionella-risicobeoordeling actueel en conform de nationale regelgeving en het CPE Legionella-handboek? (alle risicovolle gebruikspunten zijn geïdentificeerd en worden opgevolgd)", g: "Legionella" },
+          { t: "Is het sanitair logboek Legionella volledig en conform de nationale regelgeving en het CPE Legionella-handboek?", g: "Legionella" },
           { t: "Wordt de kwartaalcontrole Legionella elk kwartaal uitgevoerd, met opname van afwijkingen in de FE-04-02 Legionella?", g: "Legionella" },
           { t: "Worden alle resultaten van Legionella- en drinkwateranalyses regelmatig gecontroleerd door de S&P-verantwoordelijke?", g: "Legionella" },
           { t: "Wordt bij Legionella-besmetting (positief resultaat) de checklist FL-03-01 ingevuld en besproken met de GM, de Maintenance Manager en de ORD?", g: "Legionella" },
@@ -288,7 +288,7 @@ QUESTION_TRANSLATIONS.nl = {
           { t: "Risicobomen buiten: worden preventieve maatregelen voor risicobomen (snoeien, vellen, inventariseren…) tijdens het jaar uitgevoerd?", g: "Groenvoorzieningen" },
           { t: "Worden alle gewasbeschermings- en biocideproducten opgeslagen conform de geldende nationale regelgeving?", g: "Groenvoorzieningen" },
           { t: "Is er een contract voor ongediertebestrijding van de centrale gebouwen, opgevolgd met een actueel logboek?", g: "Groenvoorzieningen" },
-          { t: "Zijn de betrokken medewerkers opgeleid in het gebruik van gewasbeschermings- en biocideproducten en -apparatuur conform de nationale regelgeving? (CertiPhyto, Certibiocide)", g: "Groenvoorzieningen" },
+          { t: "Zijn de betrokken medewerkers opgeleid in het gebruik van gewasbeschermings- en biocideproducten en -apparatuur conform de nationale regelgeving? (CertiPhyto, Certibiocide — Franse certificeringen, of lokaal equivalent)", g: "Groenvoorzieningen" },
         ],
       },
     },
@@ -302,7 +302,7 @@ QUESTION_TRANSLATIONS.nl = {
         questions: [
           { t: "Zijn medewerkers die aan het sprinklersysteem werken (bv. IPC1) opgeleid?" },
           { t: "Is er een unieke veiligheidsverantwoordelijke opgeleid en aangesteld door de GM?" },
-          { t: "Zijn er hulpverleners (SST, PSC1, PSE1, PSE2) aanwezig in elke afdeling, conform de nationale regelgeving?" },
+          { t: "Zijn er hulpverleners (SST, PSC1, PSE1, PSE2 — Franse EHBO-certificeringen, of lokaal equivalent) aanwezig in elke afdeling, conform de nationale regelgeving?" },
         ],
       },
       "rh-safety": {

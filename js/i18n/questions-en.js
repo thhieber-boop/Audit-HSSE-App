@@ -110,8 +110,8 @@ QUESTION_TRANSLATIONS.en = {
           { t: "Is the park's CSR programme defined and regularly monitored in line with the France and CPE CSR programmes?", g: "CSR" },
           { t: "Is the updated CSR programme reported quarterly at CP France (and CPE) level?", g: "CSR" },
           { t: "Are all Legionella priority 1 items resolved within the deadline?", g: "Legionella" },
-          { t: "Is the Legionella risk assessment up to date and compliant with French regulations and the CPE Legionella manual? (all at-risk usage points identified and monitored)", g: "Legionella" },
-          { t: "Is the Legionella sanitary logbook complete and compliant with French regulations and the CPE Legionella manual?", g: "Legionella" },
+          { t: "Is the Legionella risk assessment up to date and compliant with national regulations and the CPE Legionella manual? (all at-risk usage points identified and monitored)", g: "Legionella" },
+          { t: "Is the Legionella sanitary logbook complete and compliant with national regulations and the CPE Legionella manual?", g: "Legionella" },
           { t: "Is the Legionella quarterly check carried out every quarter, with deviations included in the FE-04-02 Legionella?", g: "Legionella" },
           { t: "Are all Legionella and drinking water analysis results regularly checked by the S&P manager?", g: "Legionella" },
           { t: "In the event of Legionella contamination (positive result), is the FL-03-01 checklist completed and discussed with the GM, the Maintenance Manager and the ORD?", g: "Legionella" },
@@ -287,7 +287,7 @@ QUESTION_TRANSLATIONS.en = {
           { t: "Outdoor at-risk trees: are preventive actions on at-risk trees (pruning, felling, inventorying…) carried out during the year?", g: "Green spaces" },
           { t: "Are all plant protection and biocide products stored in accordance with current national regulations?", g: "Green spaces" },
           { t: "Is there a pest control contract for central buildings, monitored with an up-to-date logbook?", g: "Green spaces" },
-          { t: "Are relevant employees trained in the use of plant protection and biocide products and equipment in accordance with national regulations? (CertiPhyto, Certibiocide)", g: "Green spaces" },
+          { t: "Are relevant employees trained in the use of plant protection and biocide products and equipment in accordance with national regulations? (CertiPhyto, Certibiocide — French certifications, or local equivalent)", g: "Green spaces" },
         ],
       },
     },
@@ -301,7 +301,7 @@ QUESTION_TRANSLATIONS.en = {
         questions: [
           { t: "Are employees working on the sprinkler system (e.g. IPC1) trained?" },
           { t: "Is there a Sole Safety Officer trained and appointed by the GM?" },
-          { t: "Are first-aiders (SST, PSC1, PSE1, PSE2) present in every department, in accordance with national regulations?" },
+          { t: "Are first-aiders (SST, PSC1, PSE1, PSE2 — French first-aid certifications, or local equivalent) present in every department, in accordance with national regulations?" },
         ],
       },
       "rh-safety": {

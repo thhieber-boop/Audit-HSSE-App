@@ -111,8 +111,8 @@ QUESTION_TRANSLATIONS.de = {
           { t: "Ist das CSR-Programm des Parks definiert und wird es regelmäßig in Übereinstimmung mit den CSR-Programmen Frankreich und CPE nachverfolgt?", g: "CSR" },
           { t: "Wird das aktualisierte CSR-Programm vierteljährlich auf Ebene CP Frankreich (und CPE) berichtet?", g: "CSR" },
           { t: "Sind alle Priorität-1-Punkte Legionellen innerhalb der vorgesehenen Frist gelöst?", g: "Legionellen" },
-          { t: "Ist die Legionellen-Risikobewertung aktuell und konform mit den französischen Vorschriften und dem CPE-Legionellen-Handbuch? (alle risikobehafteten Nutzungspunkte sind identifiziert und werden überwacht)", g: "Legionellen" },
-          { t: "Ist das Legionellen-Sanitärbuch vollständig und konform mit den französischen Vorschriften und dem CPE-Legionellen-Handbuch?", g: "Legionellen" },
+          { t: "Ist die Legionellen-Risikobewertung aktuell und konform mit den nationalen Vorschriften und dem CPE-Legionellen-Handbuch? (alle risikobehafteten Nutzungspunkte sind identifiziert und werden überwacht)", g: "Legionellen" },
+          { t: "Ist das Legionellen-Sanitärbuch vollständig und konform mit den nationalen Vorschriften und dem CPE-Legionellen-Handbuch?", g: "Legionellen" },
           { t: "Wird die vierteljährliche Legionellen-Kontrolle jedes Quartal durchgeführt, mit Aufnahme der Abweichungen in die FE-04-02 Legionellen?", g: "Legionellen" },
           { t: "Werden alle Ergebnisse der Legionellen- und Trinkwasseranalysen regelmäßig vom S&P-Verantwortlichen geprüft?", g: "Legionellen" },
           { t: "Wird bei einer Legionellenkontamination (positives Ergebnis) die Checkliste FL-03-01 ausgefüllt und mit dem/der GM, dem Maintenance Manager und dem ORD besprochen?", g: "Legionellen" },
@@ -288,7 +288,7 @@ QUESTION_TRANSLATIONS.de = {
           { t: "Risikobäume außen: Werden präventive Maßnahmen an Risikobäumen (Beschneiden, Fällen, Inventarisierung…) im Laufe des Jahres durchgeführt?", g: "Grünflächen" },
           { t: "Werden alle Pflanzenschutz- und Biozidprodukte gemäß den geltenden nationalen Vorschriften gelagert?", g: "Grünflächen" },
           { t: "Gibt es einen Vertrag zur Schädlingsbekämpfung für die zentralen Gebäude, der mit einem aktuellen Logbuch nachverfolgt wird?", g: "Grünflächen" },
-          { t: "Sind die betroffenen Mitarbeitenden im Umgang mit Pflanzenschutz- und Biozidprodukten sowie -geräten gemäß den nationalen Vorschriften geschult? (CertiPhyto, Certibiocide)", g: "Grünflächen" },
+          { t: "Sind die betroffenen Mitarbeitenden im Umgang mit Pflanzenschutz- und Biozidprodukten sowie -geräten gemäß den nationalen Vorschriften geschult? (CertiPhyto, Certibiocide — französische Zertifizierungen, oder landesspezifisches Äquivalent)", g: "Grünflächen" },
         ],
       },
     },
@@ -302,7 +302,7 @@ QUESTION_TRANSLATIONS.de = {
         questions: [
           { t: "Sind die Mitarbeitenden, die an der Sprinkleranlage arbeiten (z. B. IPC1), geschult?" },
           { t: "Gibt es eine vom GM ernannte und geschulte alleinige Sicherheitsverantwortliche Person?" },
-          { t: "Sind in jeder Abteilung Ersthelfer (SST, PSC1, PSE1, PSE2) gemäß den nationalen Vorschriften vorhanden?" },
+          { t: "Sind in jeder Abteilung Ersthelfer (SST, PSC1, PSE1, PSE2 — französische Erste-Hilfe-Zertifizierungen, oder landesspezifisches Äquivalent) gemäß den nationalen Vorschriften vorhanden?" },
         ],
       },
       "rh-safety": {
