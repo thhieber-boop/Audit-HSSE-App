@@ -176,6 +176,7 @@ button, input, textarea { font-family: inherit; }
 
 .comment-label { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 0.8rem; color: var(--muted); font-weight: 600; margin-bottom: -2px; }
 .comment-input { min-height: 64px; border-radius: 9px; border: 1px solid var(--border); background: var(--bg); color: var(--text); padding: 9px 10px; font-size: 0.9rem; resize: vertical; }
+.recommendation-input { min-height: 56px; border-radius: 9px; border: 1px solid var(--ok); background: var(--ok-bg); color: var(--text); padding: 9px 10px; font-size: 0.9rem; resize: vertical; margin-top: 2px; }
 
 .mic-btn {
   flex-shrink: 0; border-radius: 999px; border: 1.5px solid var(--border); background: var(--card-bg);
@@ -189,6 +190,7 @@ button, input, textarea { font-family: inherit; }
   0%, 100% { box-shadow: 0 0 0 0 rgba(192, 57, 43, 0.45); }
   50% { box-shadow: 0 0 0 7px rgba(192, 57, 43, 0); }
 }
+.mic-hint { font-size: 0.76rem; color: var(--muted); font-style: italic; margin: -2px 0 6px; }
 
 .photos-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .photo-thumb { position: relative; width: 64px; height: 64px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
@@ -211,6 +213,39 @@ button, input, textarea { font-family: inherit; }
 .score-text { font-size: 0.9rem; margin-bottom: 10px; }
 .score-figures { display: flex; justify-content: center; gap: 22px; flex-wrap: wrap; font-size: 0.8rem; color: var(--muted); }
 .score-figures span { display: block; font-size: 1.3rem; font-weight: 700; color: var(--text); }
+
+.kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+.kpi-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; text-align: center; box-shadow: var(--shadow); }
+.kpi-card-wide { grid-column: 1 / -1; }
+.kpi-value { font-size: 1.8rem; font-weight: 800; color: var(--brand); line-height: 1.15; }
+.kpi-value-dept { font-size: 1.1rem; }
+.kpi-label { font-size: 0.78rem; color: var(--muted); font-weight: 600; margin-top: 2px; }
+.kpi-hint { font-size: 0.7rem; color: var(--muted); margin-top: 2px; }
+
+.chart-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 14px; box-shadow: var(--shadow); }
+.chart-title { font-size: 0.92rem; margin: 0 0 12px; }
+
+.donut-wrap { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+.donut-ring-wrap { position: relative; flex-shrink: 0; }
+.donut-svg { width: 100%; height: 100%; display: block; }
+.donut-svg circle { transition: stroke-dasharray .3s; }
+.donut-center-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 0 14%; }
+.donut-center-value { font-size: 1.35rem; font-weight: 800; color: var(--text); line-height: 1.1; }
+.donut-center-label { font-size: 0.62rem; color: var(--muted); text-transform: uppercase; letter-spacing: .02em; line-height: 1.2; margin-top: 2px; }
+.donut-legend { flex: 1; min-width: 160px; display: flex; flex-direction: column; gap: 6px; }
+.donut-legend-item { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.legend-label { flex: 1; color: var(--text); }
+.legend-value { font-weight: 700; color: var(--text); }
+
+.dept-bar-chart { display: flex; flex-direction: column; gap: 12px; }
+.dept-bar-row { display: flex; flex-direction: column; gap: 4px; }
+.dept-bar-label { font-size: 0.82rem; font-weight: 600; }
+.dept-bar-track-wrap { display: flex; align-items: center; gap: 8px; }
+.progress-bar.stacked { display: flex; flex-shrink: 0; min-width: 6px; }
+.progress-seg { height: 100%; }
+.dept-bar-total { font-size: 0.78rem; font-weight: 700; color: var(--muted); min-width: 18px; }
+.dept-bar-total:not(.muted) { color: var(--bad); }
 
 .table-wrap { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--border); }
 .nc-table { width: 100%; border-collapse: collapse; background: var(--card-bg); font-size: 0.85rem; }
@@ -260,6 +295,7 @@ button, input, textarea { font-family: inherit; }
 .print-section { color: var(--muted); margin-left: auto; }
 .print-item-text { font-weight: 600; }
 .print-item-comment { color: var(--muted); font-style: italic; margin-top: 3px; }
+.print-item-recommendation { color: var(--ok); margin-top: 3px; }
 .print-photos { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
 .print-photo { width: 90px; height: 90px; object-fit: cover; border-radius: 6px; border: 1px solid var(--border); }
 

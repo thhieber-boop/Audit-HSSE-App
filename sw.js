@@ -1,4 +1,4 @@
-const CACHE_NAME = "hsse-audit-cache-v2";
+const CACHE_NAME = "hsse-audit-cache-v3";
 const ASSETS = [
   "./",
   "./index.html",

@@ -158,7 +158,7 @@ function buildIndex() {
 
 /* --------------------------------------------------------- answer state */
 function emptyAnswer() {
-  return { status: null, ncLieu: null, ncGravite: null, comment: "", photos: [] };
+  return { status: null, ncLieu: null, ncGravite: null, comment: "", photos: [], recommendation: "" };
 }
 function getAnswer(qid) {
   if (!CURRENT_AUDIT.answers[qid]) CURRENT_AUDIT.answers[qid] = emptyAnswer();
@@ -244,6 +244,20 @@ function computeGlobalScore() {
   if (totalParc > 25 || critiqueParc > 4) score = "rouge";
   else if (totalParc <= 15 && critiqueParc <= 2) score = "vert";
   return { totalParc, critiqueParc, standardParc, score, byDept };
+}
+function computeStatusCounts() {
+  const counts = { conforme: 0, non_conforme: 0, non_observe: 0, na: 0 };
+  FLAT_QUESTIONS.forEach((q) => {
+    const a = CURRENT_AUDIT.answers[q.qid];
+    if (a && a.status && counts.hasOwnProperty(a.status)) counts[a.status]++;
+  });
+  const total = FLAT_QUESTIONS.length;
+  const answered = counts.conforme + counts.non_conforme + counts.non_observe + counts.na;
+  const nonRepondu = total - answered;
+  const observable = counts.conforme + counts.non_conforme;
+  const tauxConformite = observable > 0 ? Math.round((counts.conforme / observable) * 100) : null;
+  const tauxCompletion = total > 0 ? Math.round((answered / total) * 100) : 0;
+  return { ...counts, total, answered, nonRepondu, tauxConformite, tauxCompletion };
 }
 
 /* ------------------------------------------------------------ routing */
@@ -477,6 +491,7 @@ function renderHelp() {
           <p><strong>${esc(t("help.s2a2androidTitle"))}</strong> ${esc(t("help.s2a2android"))}</p>
           <p>${esc(t("help.s2a2alt"))}</p>
         </details>
+        ${qa(t("help.s2q3"), t("help.s2a3"))}
       </div>
 
       <h2 class="section-title">${esc(t("help.s3Title"))}</h2>
@@ -748,7 +763,7 @@ function statusDefs() {
 
 function questionCardHtml(q) {
   const a = getAnswer(q.qid);
-  const expanded = expandedQids.has(q.qid) || a.status === "non_conforme" || !!a.comment || a.photos.length > 0;
+  const expanded = expandedQids.has(q.qid) || a.status === "non_conforme" || !!a.comment || a.photos.length > 0 || !!a.recommendation;
   const statusBtns = statusDefs()
     .map((s) => `<button type="button" class="status-btn ${s.cls} ${a.status === s.key ? "active" : ""}" data-qid="${q.qid}" data-status="${s.key}">${esc(s.label)}</button>`)
     .join("");
@@ -792,9 +807,19 @@ function questionCardHtml(q) {
       ${ncBlock}
       <div class="comment-label">
         <span>${esc(t("comment.label"))}</span>
-        <button type="button" class="mic-btn" data-qid="${q.qid}" title="${esc(t("mic.title"))}">${esc(t("mic.dictate"))}</button>
+        ${SpeechRecognitionCtor ? `<button type="button" class="mic-btn" data-qid="${q.qid}" title="${esc(t("mic.title"))}">${esc(t("mic.dictate"))}</button>` : ""}
       </div>
+      ${SpeechRecognitionCtor ? "" : `<p class="mic-hint">${esc(t("mic.useKeyboardHint"))}</p>`}
       <textarea class="comment-input" data-qid="${q.qid}" placeholder="${esc(t("comment.placeholder"))}">${esc(a.comment)}</textarea>
+      ${
+        a.status === "conforme"
+          ? `
+      <div class="comment-label">
+        <span>${esc(t("recommendation.label"))}</span>
+      </div>
+      <textarea class="recommendation-input" data-qid="${q.qid}" placeholder="${esc(t("recommendation.placeholder"))}">${esc(a.recommendation || "")}</textarea>`
+          : ""
+      }
       <div class="photos-row">
         ${photosHtml}
         <label class="photo-add-btn">
@@ -877,6 +902,16 @@ function wireQuestionCards() {
       ta.addEventListener("input", () => {
         const a = getAnswer(ta.dataset.qid);
         a.comment = ta.value;
+        markDirty();
+      })
+    );
+
+  $app()
+    .querySelectorAll(".recommendation-input")
+    .forEach((ta) =>
+      ta.addEventListener("input", () => {
+        const a = getAnswer(ta.dataset.qid);
+        a.recommendation = ta.value;
         markDirty();
       })
     );
@@ -1061,10 +1096,109 @@ function readAndCompressImage(file) {
 }
 
 /* ============================================================ CONCLUSION */
+function svgDonut(segments, centerValue, centerLabel, size) {
+  size = size || 140;
+  const r = 15.9155;
+  const total = segments.reduce((s, seg) => s + seg.value, 0);
+  let cumulative = 0;
+  const arcs = segments
+    .filter((seg) => seg.value > 0)
+    .map((seg) => {
+      const pct = total > 0 ? (seg.value / total) * 100 : 0;
+      const dashoffset = 25 - cumulative;
+      cumulative += pct;
+      return `<circle cx="18" cy="18" r="${r}" fill="none" stroke="${seg.color}" stroke-width="3.8" stroke-dasharray="${pct.toFixed(2)} ${(100 - pct).toFixed(2)}" stroke-dashoffset="${dashoffset.toFixed(2)}" />`;
+    })
+    .join("");
+  return `
+  <div class="donut-ring-wrap" style="width:${size}px;height:${size}px">
+    <svg viewBox="0 0 36 36" class="donut-svg">
+      <circle cx="18" cy="18" r="${r}" fill="none" stroke="var(--grey-bg)" stroke-width="3.8" />
+      ${arcs}
+    </svg>
+    <div class="donut-center-overlay">
+      <div class="donut-center-value">${esc(centerValue)}</div>
+      <div class="donut-center-label">${esc(centerLabel)}</div>
+    </div>
+  </div>`;
+}
+
+function deptBarChartHtml(global) {
+  const rows = AUDIT_DATA.departments
+    .map((d) => {
+      const b = global.byDept[d.id];
+      const total = b.parcStd + b.parcCrit + b.centraleStd + b.centraleCrit;
+      return { d, b, total };
+    })
+    .sort((a, b) => b.total - a.total);
+  const maxTotal = Math.max(1, ...rows.map((r) => r.total));
+  const bars = rows
+    .map(({ d, b, total }) => {
+      const segs = [
+        { v: b.parcCrit, color: "var(--bad)" },
+        { v: b.parcStd, color: "var(--warn)" },
+        { v: b.centraleCrit, color: "var(--brand-dark)" },
+        { v: b.centraleStd, color: "var(--grey)" },
+      ];
+      const widthPct = (total / maxTotal) * 100;
+      const segsHtml = segs
+        .map((s) => (s.v > 0 ? `<div class="progress-seg" style="width:${(s.v / (total || 1)) * 100}%;background:${s.color}"></div>` : ""))
+        .join("");
+      return `
+      <div class="dept-bar-row">
+        <div class="dept-bar-label">${d.icon} ${esc(DEPT_INDEX[d.id].name)}</div>
+        <div class="dept-bar-track-wrap">
+          <div class="progress-bar lg stacked" style="width:${widthPct}%">${segsHtml}</div>
+          <span class="dept-bar-total ${total === 0 ? "muted" : ""}">${total}</span>
+        </div>
+      </div>`;
+    })
+    .join("");
+  return bars;
+}
+
 function renderConclusion() {
   const global = computeGlobalScore();
+  const statusCounts = computeStatusCounts();
   const scoreLabel = t("score." + global.score);
   const scoreText = { vert: t("conclusion.scoreVert"), orange: t("conclusion.scoreOrange"), rouge: t("conclusion.scoreRouge") }[global.score];
+
+  const riskiestDept = AUDIT_DATA.departments
+    .map((d) => {
+      const b = global.byDept[d.id];
+      return { d, total: b.parcStd + b.parcCrit + b.centraleStd + b.centraleCrit };
+    })
+    .sort((a, b) => b.total - a.total)[0];
+  const riskiestDeptLabel = riskiestDept && riskiestDept.total > 0 ? `${riskiestDept.d.icon} ${esc(DEPT_INDEX[riskiestDept.d.id].name)} (${riskiestDept.total})` : esc(t("conclusion.kpiNoRisk"));
+
+  const donutSvg = svgDonut(
+    [
+      { value: statusCounts.conforme, color: "var(--ok)" },
+      { value: statusCounts.non_conforme, color: "var(--bad)" },
+      { value: statusCounts.non_observe, color: "var(--warn)" },
+      { value: statusCounts.na, color: "var(--grey)" },
+      { value: statusCounts.nonRepondu, color: "var(--border)" },
+    ],
+    statusCounts.tauxCompletion + "%",
+    esc(t("conclusion.kpiCompletion")),
+    130
+  );
+  const donutLegend = [
+    { label: t("status.conforme"), value: statusCounts.conforme, color: "var(--ok)" },
+    { label: t("status.nonConforme"), value: statusCounts.non_conforme, color: "var(--bad)" },
+    { label: t("status.nonObserve"), value: statusCounts.non_observe, color: "var(--warn)" },
+    { label: t("status.na"), value: statusCounts.na, color: "var(--grey)" },
+    { label: t("status.nonRepondu"), value: statusCounts.nonRepondu, color: "var(--border)" },
+  ]
+    .map(
+      (s) => `
+    <div class="donut-legend-item">
+      <span class="legend-dot" style="background:${s.color}"></span>
+      <span class="legend-label">${esc(s.label)}</span>
+      <span class="legend-value">${s.value}</span>
+    </div>`
+    )
+    .join("");
 
   const rows = AUDIT_DATA.departments
     .map((d) => {
@@ -1102,6 +1236,36 @@ function renderConclusion() {
           <div><span>${global.standardParc}</span>${esc(t("conclusion.figStandard"))}</div>
           <div><span>${global.critiqueParc}</span>${esc(t("conclusion.figCritique"))}</div>
         </div>
+      </div>
+
+      <h2 class="section-title">${esc(t("conclusion.kpiTitle"))}</h2>
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-value">${statusCounts.tauxCompletion}%</div>
+          <div class="kpi-label">${esc(t("conclusion.kpiCompletion"))}</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-value">${statusCounts.tauxConformite === null ? "—" : statusCounts.tauxConformite + "%"}</div>
+          <div class="kpi-label">${esc(t("conclusion.kpiConformity"))}</div>
+          <div class="kpi-hint">${esc(statusCounts.tauxConformite === null ? t("conclusion.kpiConformityNA") : t("conclusion.kpiConformityHint"))}</div>
+        </div>
+        <div class="kpi-card kpi-card-wide">
+          <div class="kpi-value kpi-value-dept">${riskiestDeptLabel}</div>
+          <div class="kpi-label">${esc(t("conclusion.kpiRiskDept"))}</div>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <h3 class="chart-title">${esc(t("conclusion.statusChartTitle"))}</h3>
+        <div class="donut-wrap">
+          ${donutSvg}
+          <div class="donut-legend">${donutLegend}</div>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <h3 class="chart-title">${esc(t("conclusion.deptChartTitle"))}</h3>
+        <div class="dept-bar-chart">${deptBarChartHtml(global)}</div>
       </div>
 
       <h2 class="section-title">${esc(t("conclusion.byDept"))}</h2>
@@ -1169,6 +1333,7 @@ function renderPrint() {
             </div>
             <div class="print-item-text">${q.ref ? `<em>${esc(q.ref)}</em> — ` : ""}${esc(q.text)}</div>
             ${a.comment ? `<div class="print-item-comment">${esc(a.comment)}</div>` : ""}
+            ${a.recommendation ? `<div class="print-item-recommendation">💡 ${esc(a.recommendation)}</div>` : ""}
             ${photos ? `<div class="print-photos">${photos}</div>` : ""}
           </div>`;
         })
