@@ -130,3 +130,5 @@
 .game-end-score { font-size: 2.4rem; font-weight: 800; color: var(--brand); margin: 6px 0; }
 .game-end-tier { font-size: 1rem; font-weight: 700; margin-bottom: 10px; }
 .game-end-text { font-size: 0.88rem; color: var(--muted); margin-bottom: 18px; line-height: 1.45; }
+
+.game-end-card a.btn-ghost { display: block; text-align: center; text-decoration: none; box-sizing: border-box; }

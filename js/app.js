@@ -436,7 +436,6 @@ async function renderHome() {
         <h1>${esc(t("app.title"))}</h1>
         <p class="muted">${esc(t("app.subtitle"))}</p>
         <button class="btn-primary lg" data-nav="#/new">${esc(t("home.newAudit"))}</button>
-        <a class="btn-ghost lg" href="jeu.html">${esc(t("home.game"))}</a>
       </div>
       <h2 class="section-title">${esc(t("home.myAudits"))}</h2>
       ${audits.length ? rows : `<p class="muted">${esc(t("home.noAudits"))}</p>`}
