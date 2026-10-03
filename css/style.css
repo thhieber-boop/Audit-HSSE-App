@@ -100,6 +100,7 @@ button, input, textarea { font-family: inherit; }
 .btn-primary:active { background: var(--brand-dark); }
 .btn-primary.lg { width: 100%; padding: 14px; font-size: 1rem; margin-top: 10px; }
 .btn-ghost { background: var(--card-bg); color: var(--brand); border: 1px solid var(--border); }
+a.btn-ghost, a.btn-primary { display: inline-block; text-align: center; text-decoration: none; box-sizing: border-box; }
 .btn-ghost.sm { padding: 6px 10px; font-size: 0.82rem; }
 .btn-ghost.lg { width: 100%; padding: 14px; margin-top: 14px; }
 .btn-ghost.danger { color: var(--bad); }
